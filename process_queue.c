@@ -51,6 +51,7 @@ void ordenar_processos(GerenciadorProcessos *gerenciador)
 
 void exibir_processos(GerenciadorProcessos *gerenciador)
 {
+    printf("\n\n### Processos ####\n");
     for (int i = 0; i < gerenciador->tamanho; i++)
     {
         printf("Processo ID: %d Prioridade: %.2f.\n", gerenciador->processos[i].id, gerenciador->processos[i].prioridade);
@@ -104,8 +105,7 @@ void executar_processos(GerenciadorProcessos *gerenciador)
 //executa em forma de fila circular. dando para cada processo uma pequena quantidade de tempo para ele ser executado.
 //evita a monopolização da cpu por um unico processo;
 //evita a "fome de processos" (situação em que processos de baixa prioridade nunca são executados);
-void round_robin(GerenciadorProcessos *gerenciador)
-{
+void round_robin(GerenciadorProcessos *gerenciador){
     while (gerenciador->tamanho > 0){
         for (int i = 0; i < gerenciador->tamanho; i++){
             if (gerenciador->processos[i].estado == PRONTO){
@@ -129,24 +129,31 @@ void round_robin(GerenciadorProcessos *gerenciador)
     }
 }
 
+void inicializar_processos(GerenciadorProcessos *gerenciador){
+    adicionar_processo(gerenciador, 1, 0.0, 3.0);
+    adicionar_processo(gerenciador, 2, 8.0, 2.0);
+    adicionar_processo(gerenciador, 3, 3.0, 4.0);
+    adicionar_processo(gerenciador, 4, 1.0, 4.0);
+    adicionar_processo(gerenciador, 5, 20.0, 4.0);
+    adicionar_processo(gerenciador, 6, 10.0, 4.0);
+    adicionar_processo(gerenciador, 7, 11.0, 4.0);
+    adicionar_processo(gerenciador, 8, 12.0, 4.0);
+}
 
 int main()
 {
     GerenciadorProcessos gerenciador;
     iniciar_gerenciador(&gerenciador);
 
-    adicionar_processo(&gerenciador, 1, 0.0, 3.0);
-    adicionar_processo(&gerenciador, 2, 8.0, 2.0);
-    adicionar_processo(&gerenciador, 3, 3.0, 4.0);
-    adicionar_processo(&gerenciador, 4, 1.0, 4.0);
-    adicionar_processo(&gerenciador, 5, 20.0, 4.0);
-    adicionar_processo(&gerenciador, 6, 10.0, 4.0);
-    adicionar_processo(&gerenciador, 7, 11.0, 4.0);
-    adicionar_processo(&gerenciador, 8, 12.0, 4.0);
-
+    //RR
+    inicializar_processos(&gerenciador);
     exibir_processos(&gerenciador);
-
     round_robin(&gerenciador);
+
+    //FCFS
+    inicializar_processos(&gerenciador);
+    exibir_processos(&gerenciador);
+    executar_processos(&gerenciador);
 
     return 0;
 }
